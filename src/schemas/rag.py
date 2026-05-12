@@ -17,4 +17,4 @@ class RequestRunRag(BaseModel):
     scenario: Scenario
 
 class ResponseRunRag(BaseModel):
-    result: dict
+    result: str

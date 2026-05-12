@@ -40,8 +40,7 @@ class RagService:
 
             questions_str += f"Вопрос: {question["content"]["question"]}, Ответ: {question["content"]["answer"]}, Товар: {question["content"]["product_name"]} id Товара: {question["content"]["product_id"]}\n"
 
-        result = await self.generation_service.generate(
-            GenerateRequest(
+        request = GenerateRequest(
                 query=payload.question,
                 prompt_id=5,
                 fields={
@@ -50,8 +49,10 @@ class RagService:
                 }
             )
 
+        result = await self.generation_service.generate(
+            request
         )
 
         return ResponseRunRag(
-            result
+            result=str(result),
         )

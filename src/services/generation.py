@@ -8,9 +8,9 @@ class GenerationService:
         self.base_url = base_url
 
     async def generate(self, payload: GenerateRequest):
-
         result = await self.session.post(
-            self.base_url,
-
+            f"{self.base_url}/responses/generate",
+            json=payload.model_dump()
         )
-        return await result.json()
+        result = await result.json()
+        return result
