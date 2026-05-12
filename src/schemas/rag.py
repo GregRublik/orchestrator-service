@@ -4,13 +4,14 @@ from enum import StrEnum
 class Scenario(StrEnum):
     mp_questions = "mp_questions"
 
-class QueryData(BaseModel):
-    prompt: str
-    query: str
-    fields: dict[str, str]
+class Question(BaseModel):
+    question: str
+    product_name: str
+    product_id: int
 
 class RequestRunRag(BaseModel):
-    data: QueryData
+    query: str | None = None
+    question: Question | None = None
     scenario: Scenario
 
 class ResponseRunRag(BaseModel):

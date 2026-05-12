@@ -18,9 +18,22 @@ class SessionManager:
             await cls._session.close()
             cls._session = None
 
+class RetrievalSettings(BaseSettings):
+    host: str
+    port: int
+
+    @property
+    def dsn(self):
+        return f"http://{self.host}:{self.port}"
+
+    model_config = SettingsConfigDict(env_prefix="RETRIEVAL_", env_file=".env", extra="ignore")
+
 
 class Collections(BaseSettings):
-    questions = "questions"
+    questions: str
+
+    model_config = SettingsConfigDict(env_prefix="COLLECTION_", env_file=".env", extra="ignore")
+
 
 class Qdrant(BaseSettings):
     collections: Collections
@@ -29,6 +42,7 @@ class Settings(BaseSettings):
     host: str
     port: int
 
+    retrieval: RetrievalSettings
     qdrant: Qdrant
 
     model_config = SettingsConfigDict(env_prefix="APP_", env_file=".env", extra="ignore")
@@ -37,5 +51,7 @@ class Settings(BaseSettings):
 settings = Settings(
     qdrant=Qdrant(
         collections=Collections()
+    ),
+    retrieval=RetrievalSettings(
     )
 )
