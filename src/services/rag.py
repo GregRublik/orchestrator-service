@@ -1,4 +1,5 @@
 from schemas.rag import RequestRunRag, Scenario, Question, ResponseRunRag
+from schemas.generation import GenerateRequest
 from schemas.retrieval import SearchRequest
 from services.retrieval import RetrievalService
 from services.generation import GenerationService
@@ -18,13 +19,39 @@ class RagService:
             return await self.execute_scenario_questions(request.question, settings.qdrant.collections.questions)
 
     async def execute_scenario_questions(self, payload: Question, questions_collection: str) -> ResponseRunRag:
-        found_data = await self.retrieval_service.search(
+
+        if payload.product_id is not None:
+            filters = {
+                "product_id": payload.product_id
+            }
+        else:
+            filters = None
+
+        questions = await self.retrieval_service.search(
             SearchRequest(
                 query=payload.question,
-                collection=questions_collection
+                collection=questions_collection,
+                filters=filters
             )
         )
-        print(found_data)
+
+        questions_str = ""
+        for question in questions["results"]:
+
+            questions_str += f"Вопрос: {question["content"]["question"]}, Ответ: {question["content"]["answer"]}, Товар: {question["content"]["product_name"]} id Товара: {question["content"]["product_id"]}\n"
+
+        result = await self.generation_service.generate(
+            GenerateRequest(
+                query=payload.question,
+                prompt_id=5,
+                fields={
+                    "questions": questions_str,
+                    "product_description": payload.product_description
+                }
+            )
+
+        )
 
         return ResponseRunRag(
+            result
         )

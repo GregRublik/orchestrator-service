@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from enum import StrEnum
+from typing import Optional
 
 class Scenario(StrEnum):
     mp_questions = "mp_questions"
@@ -7,12 +8,13 @@ class Scenario(StrEnum):
 class Question(BaseModel):
     question: str
     product_name: str
-    product_id: int
+    product_description: str
+    product_id: Optional[int] = None
 
 class RequestRunRag(BaseModel):
-    query: str | None = None
-    question: Question | None = None
+    query: Optional[str] = None
+    question: Optional[Question] = None
     scenario: Scenario
 
 class ResponseRunRag(BaseModel):
-    pass
+    result: dict

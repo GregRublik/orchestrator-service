@@ -13,8 +13,12 @@ def get_http_session(
 ) -> ClientSession:
     return http_session
 
-def get_generation_service() -> GenerationService:
-    return GenerationService()
+def get_generation_service(
+    http_session: ClientSession = Depends(get_http_session),
+) -> GenerationService:
+    return GenerationService(
+        http_session, settings.generation.dsn
+    )
 
 def get_retrieval_service(
         http_session: ClientSession = Depends(get_http_session),

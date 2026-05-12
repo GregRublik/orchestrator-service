@@ -1,6 +1,9 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from aiohttp import ClientSession
 
+from services.generation import GenerationService
+
+
 class SessionManager:
     _session: ClientSession | None = None
 
@@ -17,6 +20,16 @@ class SessionManager:
         if cls._session is not None:
             await cls._session.close()
             cls._session = None
+
+class GenerationSettings(BaseSettings):
+    host: str
+    port: int
+
+    @property
+    def dsn(self):
+        return f"http://{self.host}:{self.port}"
+
+    model_config = SettingsConfigDict(env_prefix="GENERATION_", env_file=".env", extra="ignore")
 
 class RetrievalSettings(BaseSettings):
     host: str
@@ -43,6 +56,7 @@ class Settings(BaseSettings):
     port: int
 
     retrieval: RetrievalSettings
+    generation: GenerationSettings
     qdrant: Qdrant
 
     model_config = SettingsConfigDict(env_prefix="APP_", env_file=".env", extra="ignore")
@@ -53,5 +67,7 @@ settings = Settings(
         collections=Collections()
     ),
     retrieval=RetrievalSettings(
+    ),
+    generation=GenerationSettings(
     )
 )
