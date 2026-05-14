@@ -14,4 +14,6 @@ class RetrievalService:
             self.base_url + "/search",
             json=payload.model_dump()
         )
-        return await response.json()
+        response = await response.json()
+
+        return response.get("data")

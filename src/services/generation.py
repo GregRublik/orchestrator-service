@@ -13,4 +13,4 @@ class GenerationService:
             json=payload.model_dump()
         )
         result = await result.json()
-        return result
+        return result.get("data")
