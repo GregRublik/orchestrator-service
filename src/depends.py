@@ -5,7 +5,8 @@ from services.generation import GenerationService
 
 from aiohttp import ClientSession
 
-from config import SessionManager, settings
+from config import settings
+from utils.session_manager import SessionManager
 
 
 def get_http_session(
