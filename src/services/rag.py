@@ -42,8 +42,9 @@ class RagService:
         ) # TODO надо поделить на чанки, после этого переранжировать и передавать в контекст только наиболее релевантные
 
         web_info_product_str = ""
-        for product in data_product.results:
-            web_info_product_str += f"Найденная информация:\n 1 ТЕМА: {product.title}, 2 Данные:{product.content[:200]}, 3 Ссылка: {product.url}"
+        print(data_product)
+        for product in data_product["data"]:
+            web_info_product_str += f"Найденная информация:\n 1 ТЕМА: {product['title']}, 2 Данные:{product['content'][:200]}, 3 Ссылка: {product['url']}"
 
         questions_str = ""
         for question in questions["results"]:

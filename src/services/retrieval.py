@@ -11,8 +11,9 @@ class RetrievalService:
         self.base_url = base_url
 
     async def search(self, payload: SearchRequest) -> SearchResponse:
+        print(payload.model_dump())
         response = await self.session.post(
-            self.base_url + "/search",
+            self.base_url + "/search/",
             json=payload.model_dump()
         )
         response = await response.json()
@@ -20,10 +21,11 @@ class RetrievalService:
         return response.get("data")
 
     async def web_search(self, payload: WebSearchRequest) -> WebSearchResponse:
+        print(payload.model_dump())
         response = await self.session.post(
-            self.base_url + "/web/search",
+            self.base_url + "/web/search/",
             json=payload.model_dump()
         )
         response = await response.json()
 
-        return WebSearchResponse(results=response.get("data"))
+        return response.get("data")
