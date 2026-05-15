@@ -1,6 +1,7 @@
 from services.generation import GenerationService
-from schemas.retrieval import SearchRequest, SearchResponse
+from schemas.retrieval import SearchRequest, SearchResponse, WebSearchRequest, WebSearchResponse
 from aiohttp import ClientSession
+from typing import List
 
 
 class RetrievalService:
@@ -17,3 +18,12 @@ class RetrievalService:
         response = await response.json()
 
         return response.get("data")
+
+    async def web_search(self, payload: WebSearchRequest) -> WebSearchResponse:
+        response = await self.session.post(
+            self.base_url + "/web/search",
+            json=payload.model_dump()
+        )
+        response = await response.json()
+
+        return WebSearchResponse(results=response.get("data"))

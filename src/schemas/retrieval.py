@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 class BaseSearchRequest(BaseModel):
@@ -16,5 +16,18 @@ class SearchResult(BaseModel):
     content: dict
     metadata: dict
 
+class WebSearchResult(BaseModel):
+    url: str
+    title: str
+    score: float
+    content: dict
+
 class SearchResponse(BaseModel):
-    results: list[SearchResult]
+    results: List[SearchResult]
+
+class WebSearchRequest(BaseModel):
+    query: str
+    top_k: int = 5
+
+class WebSearchResponse(BaseModel):
+    results: List[WebSearchResult]

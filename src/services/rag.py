@@ -1,6 +1,6 @@
 from schemas.rag import RequestRunRag, Scenario, Question, ResponseRunRag
 from schemas.generation import GenerateRequest
-from schemas.retrieval import SearchRequest
+from schemas.retrieval import SearchRequest, WebSearchRequest
 from services.retrieval import RetrievalService
 from services.generation import GenerationService
 
@@ -34,10 +34,19 @@ class RagService:
                 filters=filters
             )
         )
+        data_product = await self.retrieval_service.web_search(
+            WebSearchRequest(
+                query=payload.product_name, # ищем конкретно такой товар
+                top_k=5
+            )
+        ) # TODO надо поделить на чанки, после этого переранжировать и передавать в контекст только наиболее релевантные
+
+        web_info_product_str = ""
+        for product in data_product.results:
+            web_info_product_str += f"Найденная информация:\n 1 ТЕМА: {product.title}, 2 Данные:{product.content[:200]}, 3 Ссылка: {product.url}"
 
         questions_str = ""
         for question in questions["results"]:
-
             questions_str += f"Вопрос: {question["content"]["question"]}, Ответ: {question["content"]["answer"]}, Товар: {question["content"]["product_name"]} id Товара: {question["content"]["product_id"]}\n"
 
         request = GenerateRequest(
@@ -45,7 +54,8 @@ class RagService:
                 prompt_id=5,
                 fields={
                     "questions": questions_str,
-                    "product_description": payload.product_description
+                    "product_description": payload.product_description,
+                    "web_info": web_info_product_str
                 }
             )
 
