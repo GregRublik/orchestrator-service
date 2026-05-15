@@ -14,8 +14,4 @@ answers.json
 .DS_Store
 
 # testing
-questions.json
-rag_results.json
-runner.py
-searcher.py
-settings.yml
+tests/ignor
