@@ -37,15 +37,18 @@ class RagService:
         data_product = await self.retrieval_service.web_search(
             WebSearchRequest(
                 query=payload.product_name, # ищем конкретно такой товар
-                top_k=5
+                top_k=20
             )
         ) # TODO надо поделить на чанки, после этого переранжировать и передавать в контекст только наиболее релевантные
 
+        rerank_data_product = await self.retrieval_service.rerank_web_search_data(
+            payload.question,
+            data_product["data"],
+            top_k=5
+        )
         web_info_product_str = ""
-        print(data_product)
-        for product in data_product["data"]:
-            web_info_product_str += f"Найденная информация:\n 1 ТЕМА: {product['title']}, 2 Данные:{product['content'][:200]}, 3 Ссылка: {product['url']}"
-
+        for product in rerank_data_product["results"]:
+            web_info_product_str += f"Найденная информация:\n 1 ТЕМА: {product['title']}, 2 Данные:{product['content']}, 3 Ссылка: {product['url']}"
         questions_str = ""
         for question in questions["results"]:
             questions_str += f"Вопрос: {question["content"]["question"]}, Ответ: {question["content"]["answer"]}, Товар: {question["content"]["product_name"]} id Товара: {question["content"]["product_id"]}\n"
