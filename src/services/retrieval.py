@@ -13,7 +13,7 @@ class RetrievalService:
 
     async def search(self, payload: SearchRequest) -> SearchResponse:
         response = await self.session.post(
-            self.base_url + "/search/",
+            self.base_url + "/search/query/",
             json=payload.model_dump()
         )
         response = await response.json()
