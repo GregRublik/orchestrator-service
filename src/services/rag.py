@@ -6,6 +6,8 @@ from services.generation import GenerationService
 
 from config import settings
 
+from exceptions import GeneratorServiceNotAvailable
+
 
 class RagService:
     """Service execution RAG pipeline"""
@@ -16,17 +18,19 @@ class RagService:
 
     async def generation(self, payload: RequestRunRagGenerate) -> ResponseRunRag:
 
-        result = await self.generation_service.generate(
-            GenerateRequest(
-                query=payload.query,
-                prompt_id=payload.prompt_id,
-                fields={}
+        try:
+            result = await self.generation_service.generate(
+                GenerateRequest(
+                    query=payload.query,
+                    prompt_id=payload.prompt_id,
+                    fields={}
+                )
             )
-        )
-
-        return ResponseRunRag(
-            result=str(result),
-        )
+            return ResponseRunRag(
+                result=str(result),
+            )
+        except GeneratorServiceNotAvailable:
+            raise GeneratorServiceNotAvailable
 
     async def questions(
         self,

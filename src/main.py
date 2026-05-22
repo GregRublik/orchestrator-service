@@ -3,9 +3,14 @@ import uvicorn
 from config import settings
 from api.v1.endpoints import rag
 
+from exceptions import APIException
+from exception_handlers import api_exception_handler
+
 
 app = FastAPI()
 app.include_router(rag.router)
+
+app.add_exception_handler(APIException, api_exception_handler)
 
 
 if __name__ == "__main__":
