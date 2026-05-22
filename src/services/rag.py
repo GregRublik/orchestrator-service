@@ -1,4 +1,4 @@
-from schemas.rag import RequestRunRag, Scenario, Question, ResponseRunRag
+from schemas.rag import RequestRunRagQuestion, RequestRunRagGenerate, Question, ResponseRunRag
 from schemas.generation import GenerateRequest
 from schemas.retrieval import SearchRequest, WebSearchRequest
 from services.retrieval import RetrievalService
@@ -14,28 +14,26 @@ class RagService:
         self.generation_service = generation_service
         self.retrieval_service = retrieval_service
 
-    async def execute(self, payload: RequestRunRag) -> ResponseRunRag:
-        if payload.scenario == Scenario.mp_questions:
-            return await self.execute_scenario_questions(payload, settings.qdrant.collections.questions)
-        return await self.execute_scenario_generation(payload)
-
-
-    async def execute_scenario_generation(self, payload: RequestRunRag):
-        request = GenerateRequest(
-            query=payload.query,
-            prompt_id=payload.prompt_id,
-            fields={}
-        )
+    async def generation(self, payload: RequestRunRagGenerate) -> ResponseRunRag:
 
         result = await self.generation_service.generate(
-            request
+            GenerateRequest(
+                query=payload.query,
+                prompt_id=payload.prompt_id,
+                fields={}
+            )
         )
 
         return ResponseRunRag(
             result=str(result),
         )
 
-    async def execute_scenario_questions(self, payload: RequestRunRag, questions_collection: str) -> ResponseRunRag:
+    async def questions(
+        self,
+        payload:
+        RequestRunRagQuestion,
+        questions_collection: str = settings.qdrant.collections.questions
+    ) -> ResponseRunRag:
 
         if payload.question.product_id is not None:
             filters = {
@@ -56,8 +54,7 @@ class RagService:
                 query=payload.question.product_name, # ищем конкретно такой товар
                 top_k=20
             )
-        ) # TODO надо поделить на чанки, после этого переранжировать и передавать в контекст только наиболее релевантные
-
+        )
         rerank_data_product = await self.retrieval_service.rerank_web_search_data(
             payload.question.question,
             data_product["data"],

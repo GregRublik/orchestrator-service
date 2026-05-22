@@ -2,9 +2,6 @@ from pydantic import BaseModel
 from enum import StrEnum
 from typing import Optional
 
-class Scenario(StrEnum):
-    mp_questions = "mp_questions"
-    generation = "generation"
 
 class Question(BaseModel):
     question: str
@@ -13,10 +10,13 @@ class Question(BaseModel):
     product_id: Optional[int] = None
 
 class RequestRunRag(BaseModel):
-    query: Optional[str] = None
-    prompt_id: Optional[int] = 7
+    prompt_id: int
+
+class RequestRunRagGenerate(RequestRunRag):
+    query: str
+
+class RequestRunRagQuestion(RequestRunRag):
     question: Optional[Question] = None
-    scenario: Scenario
 
 class ResponseRunRag(BaseModel):
     result: str
