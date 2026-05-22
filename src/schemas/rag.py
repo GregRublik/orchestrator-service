@@ -4,6 +4,7 @@ from typing import Optional
 
 class Scenario(StrEnum):
     mp_questions = "mp_questions"
+    generation = "generation"
 
 class Question(BaseModel):
     question: str
@@ -13,6 +14,7 @@ class Question(BaseModel):
 
 class RequestRunRag(BaseModel):
     query: Optional[str] = None
+    prompt_id: Optional[int] = 7
     question: Optional[Question] = None
     scenario: Scenario
 
