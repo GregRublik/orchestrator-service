@@ -10,4 +10,4 @@ RUN uv pip install --system .
 
 COPY . .
 
-CMD python src/main.py
+CMD ["python", "src/main.py"]
