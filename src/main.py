@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import uvicorn
 from config import settings
-from api.v1.endpoints import rag
+from api.v1.endpoints import rag, health
 
 from exceptions import APIException
 from exception_handlers import api_exception_handler
@@ -9,6 +9,7 @@ from exception_handlers import api_exception_handler
 
 app = FastAPI()
 app.include_router(rag.router)
+app.include_router(health.router)
 
 app.add_exception_handler(APIException, api_exception_handler)
 
