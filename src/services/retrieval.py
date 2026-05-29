@@ -17,15 +17,18 @@ class RetrievalService:
                 self.base_url + "/search/query/",
                 json=payload.model_dump()
             )
-            if response.status == 500: raise RetrievalServiceNotAvailable
+            # if response.status == 500: raise RetrievalServiceNotAvailable
             response = await response.json()
             return response.get("data")
-        except RetrievalServiceNotAvailable as e:
-            print(e.detail)
-            raise e
-        except ClientConnectorError as e:
-            print(e)
-            raise RetrievalServiceNotAvailable
+
+        # except RetrievalServiceNotAvailable as e:
+        #     print(e.detail)
+        #     raise e
+        # except ClientConnectorError as e:
+        #     print(e)
+        #     raise RetrievalServiceNotAvailable
+        finally:
+            pass
 
     async def web_search(self, payload: WebSearchRequest) -> WebSearchResponse:
         try:
