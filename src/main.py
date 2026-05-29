@@ -8,8 +8,8 @@ from exception_handlers import api_exception_handler
 
 
 app = FastAPI()
-app.include_router(rag.router)
-app.include_router(health.router)
+app.include_router(rag.router,  tags=["rag"])
+app.include_router(health.router, tags=["health"])
 
 app.add_exception_handler(APIException, api_exception_handler)
 
