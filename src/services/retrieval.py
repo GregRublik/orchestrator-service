@@ -21,8 +21,10 @@ class RetrievalService:
             response = await response.json()
             return response.get("data")
         except RetrievalServiceNotAvailable as e:
+            print(e.detail)
             raise e
-        except ClientConnectorError:
+        except ClientConnectorError as e:
+            print(e)
             raise RetrievalServiceNotAvailable
 
     async def web_search(self, payload: WebSearchRequest) -> WebSearchResponse:
