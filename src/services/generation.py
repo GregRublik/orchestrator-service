@@ -16,11 +16,12 @@ class GenerationService:
                 f"{self.base_url}/responses/generate/",
                 json=payload.model_dump()
             )
-            if result.status == 500:
-                raise GeneratorServiceNotAvailable()
+            # if result.status == 500: raise GeneratorServiceNotAvailable()
             result = await result.json()
             return result.get("data")
-        except GeneratorServiceNotAvailable as e:
-            raise e
-        except ClientConnectorError:
-            raise GeneratorServiceNotAvailable
+        # except GeneratorServiceNotAvailable as e:
+        #     raise e
+        # except ClientConnectorError:
+        #     raise GeneratorServiceNotAvailable
+        finally:
+            pass
