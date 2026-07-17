@@ -31,6 +31,20 @@ class Collections(BaseSettings):
 class Qdrant(BaseSettings):
     collections: Collections
 
+class RabbitMQSettings(BaseSettings):
+
+    user: str
+    password: str
+    host: str
+    port: int
+
+    @property
+    def dsn(self):
+        return f"amqp://{self.user}:{self.password}@{self.host}:{self.port}/"
+
+    model_config = SettingsConfigDict(env_prefix="RABBITMQ_", env_file=".env", extra="ignore")
+
+
 class Settings(BaseSettings):
     host: str
     port: int
@@ -38,6 +52,7 @@ class Settings(BaseSettings):
     retrieval: RetrievalSettings
     generation: GenerationSettings
     qdrant: Qdrant
+    rabbitmq: RabbitMQSettings
 
     model_config = SettingsConfigDict(env_prefix="APP_", env_file=".env", extra="ignore")
 
@@ -49,5 +64,7 @@ settings = Settings(
     retrieval=RetrievalSettings(
     ),
     generation=GenerationSettings(
+    ),
+    rabbitmq=RabbitMQSettings(
     )
 )
