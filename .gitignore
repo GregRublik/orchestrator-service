@@ -15,3 +15,7 @@ answers.json
 
 # testing
 tests/ignor
+Поля номенклатуры.xlsx
+reviews.json
+generation_service_api.txt
+task.txt

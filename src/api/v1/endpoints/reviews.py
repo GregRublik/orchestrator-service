@@ -35,7 +35,7 @@ async def reviews(
     message_id = str(uuid4())
     try:
         await router.broker.publish(
-            {"data": request.model_dump()},
+            request.model_dump(),
             message_id=message_id,
             queue=reviews_queue,
             persist=True,

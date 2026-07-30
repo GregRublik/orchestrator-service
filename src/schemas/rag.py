@@ -14,6 +14,7 @@ class RequestRunRag(BaseModel):
 
 class RequestRunRagGenerate(RequestRunRag):
     query: str
+    fields: Optional[dict[str, str]] = {}
 
 class RequestRunRagQuestion(RequestRunRag):
     question: Optional[Question] = None

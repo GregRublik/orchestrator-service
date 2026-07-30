@@ -23,7 +23,7 @@ class RagService:
                 GenerateRequest(
                     query=payload.query,
                     prompt_id=payload.prompt_id,
-                    fields={}
+                    fields=payload.fields
                 )
             )
             return ResponseRunRag(
