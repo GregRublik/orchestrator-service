@@ -11,9 +11,19 @@ with open(REVIEWS_FILE) as f:
 print(f"Отзывов для отправки: {len(feedbacks)}")
 
 for i, review in enumerate(feedbacks, 1):
-    resp = requests.post(f"{ORCHESTRATOR}/reviews", json=review, timeout=30)
+    pd = review.get("productDetails") or {}
+    payload = {
+        "id": review["id"],
+        "text": review.get("text", ""),
+        "pros": review.get("pros", ""),
+        "cons": review.get("cons", ""),
+        "productValuation": review.get("productValuation", 0),
+        "productName": pd.get("productName", ""),
+        "brandName": pd.get("brandName", ""),
+    }
+    resp = requests.post(f"{ORCHESTRATOR}/reviews", json=payload, timeout=30)
     status = "✓" if resp.status_code == 200 else f"✗ {resp.status_code}"
-    name = review.get("productDetails", {}).get("productName", "?")[:70]
+    name = payload["productName"][:70]
     print(f"[{i:2}/{len(feedbacks)}] {status} | {name}")
     if resp.status_code != 200:
         print(f"       {resp.text[:200]}", file=sys.stderr)
