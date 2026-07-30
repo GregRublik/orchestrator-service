@@ -10,3 +10,18 @@ class GeneratorServiceNotAvailable(BaseException):
 class RetrievalServiceNotAvailable(BaseException):
     """Сервис поиска недоступен"""
     detail = "Retrieval is not available"
+
+class ModelAlreadyExistsException(BaseException):
+    """Объект уже существует"""
+
+    detail = "model already exists"
+
+class ModelNotFoundException(Exception):
+    """Объект не найден"""
+
+    detail = "model not found"
+
+class ModelMultipleResultsFoundException(BaseException):
+    """При ожидании одного объекта нашлось несколько экземпляров"""
+
+    detail = "multiple results found"
