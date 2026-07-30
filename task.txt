@@ -1,0 +1,49 @@
+вот какого вида я получаю отзывы:
+      {
+        "id": "e93zuLroPHOzgFeXxI7H",
+        "text": "Не действует",
+        "pros": "",
+        "cons": "",
+        "productValuation": 1,
+        "createdDate": "2026-03-19T09:28:34Z",
+        "answer": null,
+        "state": "none",
+        "productDetails": {
+          "imtId": 361633407,
+          "nmId": 362372783,
+          "productName": "Средство от моли антимоль в шкаф для шубы с лавандой 2шт",
+          "supplierArticle": "Nad-270740",
+          "supplierName": "ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ \"СЕНТ\"",
+          "brandName": "Nadzor",
+          "size": "0"
+        },
+        "video": null,
+        "wasViewed": false,
+        "photoLinks": null,
+        "userName": "",
+        "orderStatus": "buyout",
+        "matchingSize": "",
+        "isAbleSupplierFeedbackValuation": true,
+        "supplierFeedbackValuation": 0,
+        "isAbleSupplierProductValuation": true,
+        "supplierProductValuation": 0,
+        "isAbleReturnProductOrders": true,
+        "returnProductOrdersDate": null,
+        "bables": null,
+        "lastOrderShkId": 43845705964,
+        "lastOrderCreatedAt": "2025-11-04T10:46:46.380112Z",
+        "color": "2 шт.",
+        "subjectId": 701,
+        "subjectName": "Защита от насекомых",
+        "parentFeedbackId": null,
+        "childFeedbackId": null
+      },
+
+как построить агента который проводил бы аналитику отзыва?
+
+по сути мне нужно выяснять:
+- Точно ли отзыв является положительным или отрицательным, к примеру бывает нажимают 5 звезд, но товар им нравится
+- Классифицировать проблему товара. К примеру проблема в "доставке", "качестве", и тд и тп
+ (Возможно я смогу предоставлять информацию о том какие классы проблем могут быть, может стоит создать db которая будет содержать список продукции которую мы рекомендуем)
+- На положительные отзывы рекомендовать нашу продукцию (для этого ему необходимо будет определить возможную потребность, и рекомендовать подходящую)
+- Рекомендация должна совмещаться со сгенерированным ответом, который у меня создавался в последнее время вот так: @prompt.txt

@@ -2,6 +2,7 @@ from fastapi import Depends
 from services import rag
 from services.retrieval import RetrievalService
 from services.generation import GenerationService
+from services.review import ReviewService
 
 from aiohttp import ClientSession
 
@@ -36,3 +37,6 @@ def get_rag_service(
         generation_service,
         retrieval_service,
     )
+
+def get_review_service():
+    return ReviewService()

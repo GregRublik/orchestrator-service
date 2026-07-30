@@ -1,4 +1,8 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+import logging
+
+logging.basicConfig(level=logging.INFO,format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",)
+logger = logging.getLogger(__name__)
 
 
 class GenerationSettings(BaseSettings):
@@ -31,8 +35,15 @@ class Collections(BaseSettings):
 class Qdrant(BaseSettings):
     collections: Collections
 
+class RabbitMQQueueSettings(BaseSettings):
+    reviews: str = "reviews_new_message"
+    questions: str = "questions_new_message"
+
+    model_config = SettingsConfigDict(env_prefix="RABBITMQ_QUEUE_", env_file=".env", extra="ignore")
+
 class RabbitMQSettings(BaseSettings):
 
+    queues: RabbitMQQueueSettings
     user: str
     password: str
     host: str
@@ -66,5 +77,6 @@ settings = Settings(
     generation=GenerationSettings(
     ),
     rabbitmq=RabbitMQSettings(
+        queues=RabbitMQQueueSettings()
     )
 )
