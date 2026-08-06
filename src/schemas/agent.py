@@ -214,3 +214,25 @@ class ReviewAnalysisResponse(BaseModel):
 
 class ReviewAnalysisUpdate(BaseModel):
     is_read: Optional[bool] = None
+
+
+# ---------------------------------------------------------------------------
+# CRUD схемы для question_answers
+# ---------------------------------------------------------------------------
+
+class QuestionAnswerResponse(BaseModel):
+    id: int
+    question_text: str = ""
+    product_name: str = ""
+    product_description: str = ""
+    product_id: Optional[int] = None
+    prompt_id: int
+    answer_text: str = ""
+    is_read: int = 0
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class QuestionAnswerUpdate(BaseModel):
+    is_read: Optional[int] = None

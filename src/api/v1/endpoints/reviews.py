@@ -15,19 +15,10 @@ from exceptions import APIException
 from queues import reviews_queue
 
 
-router = RabbitRouter(
-    settings.rabbitmq.dsn
-)
+from .broker_router import broker_router
 
 
-@router.after_startup
-async def declare_reviews_queue(app):
-    """Декларирует очередь при старте роутера — очередь существует всегда,
-    даже если воркер ещё не запущен."""
-    await router.broker.declare_queue(reviews_queue)
-
-
-@router.post("/reviews", response_model=APIResponse[Any])
+@broker_router.post("/reviews", response_model=APIResponse[Any])
 async def reviews(
     request: CreateReviewRequest,
     # review_service: ReviewService = Depends(get_review_service),
@@ -35,7 +26,7 @@ async def reviews(
     message_id = str(uuid4())
     try:
         # Разворачиваем в полный ReviewInput — воркер ожидает его
-        await router.broker.publish(
+        await broker_router.broker.publish(
             request.to_review_input().model_dump(),
             message_id=message_id,
             queue=reviews_queue,

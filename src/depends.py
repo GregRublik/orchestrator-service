@@ -14,6 +14,7 @@ from services.review import ReviewService
 from services.agent_orchestrator import AgentOrchestrator
 
 from repositories.problem_class import ProblemClassRepository
+from repositories.question_answer import QuestionAnswerRepository
 from repositories.recommendation_product import RecommendationProductRepository
 from repositories.review_analysis import ReviewAnalysisRepository
 
@@ -76,6 +77,10 @@ def get_recommendation_product_repository() -> RecommendationProductRepository:
 
 def get_review_analysis_repository() -> ReviewAnalysisRepository:
     return ReviewAnalysisRepository()
+
+
+def get_question_answer_repository() -> QuestionAnswerRepository:
+    return QuestionAnswerRepository()
 
 
 # ---------------------------------------------------------------------------
