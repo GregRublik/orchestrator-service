@@ -72,6 +72,7 @@ class RabbitMQSettings(BaseSettings):
 
 class AgentPromptIds(BaseSettings):
     """prompt_id в generation_service для каждого агента."""
+    questions: int = 9
     sentiment: int = 5
     problem_classification: int = 6
     recommendation: int = 7

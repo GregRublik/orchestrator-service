@@ -1,4 +1,5 @@
-from schemas.rag import RequestRunRagQuestion, RequestRunRagGenerate, Question, ResponseRunRag
+from schemas.rag import RequestRunRagGenerate, ResponseRunRag
+from schemas.question import QuestionInput
 from schemas.generation import GenerateRequest
 from schemas.retrieval import SearchRequest, WebSearchRequest
 from services.retrieval import RetrievalService
@@ -34,33 +35,33 @@ class RagService:
 
     async def questions(
         self,
-        payload:
-        RequestRunRagQuestion,
-        questions_collection: str = settings.qdrant.collections.questions
+        payload: QuestionInput,
+        prompt_id: int,
+        questions_collection: str = settings.qdrant.collections.questions,
     ) -> ResponseRunRag:
 
-        if payload.question.product_id is not None:
+        if payload.product_id is not None:
             filters = {
-                "product_id": payload.question.product_id
+                "product_id": payload.product_id
             }
         else:
             filters = None
 
         questions = await self.retrieval_service.search(
             SearchRequest(
-                query=payload.question.question,
+                query=payload.question,
                 collection=questions_collection,
                 filters=filters
             )
         )
         data_product = await self.retrieval_service.web_search(
             WebSearchRequest(
-                query=payload.question.product_name, # ищем конкретно такой товар
+                query=payload.product_name, # ищем конкретно такой товар
                 top_k=20
             )
         )
         rerank_data_product = await self.retrieval_service.rerank_web_search_data(
-            payload.question.question,
+            payload.question,
             data_product["data"],
             top_k=5
         )
@@ -81,11 +82,11 @@ ID Товара: {question["content"]["product_id"]}\n
 """
 
         request = GenerateRequest(
-                query=payload.question.question,
-                prompt_id=payload.prompt_id,
+                query=payload.question,
+                prompt_id=prompt_id,
                 fields={
                     "questions": questions_str,
-                    "product_description": payload.question.product_description,
+                    "product_description": payload.product_description,
                     "web_info": web_info_product_str
                 }
             )

@@ -12,7 +12,7 @@ from faststream.rabbit.broker import RabbitBroker
 from faststream.rabbit import RabbitMessage
 
 from config import settings, logger
-from schemas.rag import RequestRunRagQuestion
+from schemas.question import QuestionInput
 from queues import questions_queue
 from db.database import async_session_maker
 from repositories.question_answer import QuestionAnswerRepository
@@ -38,29 +38,29 @@ async def questions(data: dict, message: RabbitMessage):
         rag_service = _build_rag_service(http_session)
 
         try:
-            request = RequestRunRagQuestion(**data)
-            result = await rag_service.questions(request)
-            logger.info("Question processed: %s -> %s", request.question, result.result[:100])
+            question_input = QuestionInput(**data)
+            prompt_id = settings.agent_prompts.questions
+            result = await rag_service.questions(question_input, prompt_id)
+            logger.info("Question processed: %s -> %s", question_input.question, result.result[:100])
 
             # Сохраняем результат в БД
-            q = request.question
             repo = QuestionAnswerRepository()
             async with async_session_maker() as session:
                 await repo.add_one(session, {
-                    "question_text": q.question if q else "",
-                    "product_name": q.product_name if q else "",
-                    "product_description": q.product_description if q else "",
-                    "product_id": q.product_id if q else None,
-                    "prompt_id": request.prompt_id,
+                    "question_text": question_input.question,
+                    "product_name": question_input.product_name,
+                    "product_description": question_input.product_description,
+                    "product_id": question_input.product_id,
+                    "prompt_id": prompt_id,
                     "answer_text": result.result,
                 })
                 await session.commit()
-                logger.info("Question answer saved for: %s", q.question if q else request.prompt_id)
+                logger.info("Question answer saved for: %s", question_input.question)
 
             await message.ack()
 
         except Exception as e:
-            question_id = data.get("question", {}).get("question", "unknown") if isinstance(data, dict) else "unknown"
+            question_id = data.get("question", "unknown") if isinstance(data, dict) else "unknown"
             logger.error("Failed to process question '%s': %s", question_id, e)
 
             retry_count = int(message.headers.get("x-retry-count", 0))
