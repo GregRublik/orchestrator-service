@@ -12,6 +12,7 @@ from alembic import context
 from models.problem_class import ProblemClass # noqa
 from models.review_analysis import ReviewAnalysis # noqa
 from models.recommendation_product import RecommendationProduct # noqa
+from models.question_answer import QuestionAnswer # noqa
 
 
 from db.database import Base
