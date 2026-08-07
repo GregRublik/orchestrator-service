@@ -51,6 +51,7 @@ async def questions(data: dict, message: RabbitMessage):
                     "product_name": question_input.product_name,
                     "product_description": question_input.product_description,
                     "product_id": question_input.product_id,
+                    "external_id": question_input.id,
                     "prompt_id": prompt_id,
                     "answer_text": result.result,
                 })

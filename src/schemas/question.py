@@ -8,6 +8,7 @@ class CreateQuestionRequest(BaseModel):
     """Минимально необходимые поля для обработки вопроса.
     Оркестратору реально нужны только: вопрос, название товара, описание, ID товара."""
 
+    id: Optional[str] = None
     question: str
     product_name: str
     product_description: str
@@ -16,6 +17,7 @@ class CreateQuestionRequest(BaseModel):
     def to_question_input(self) -> "QuestionInput":
         """Разворачивает минимальную схему в полную QuestionInput."""
         return QuestionInput(
+            id=self.id,
             question=self.question,
             product_name=self.product_name,
             product_description=self.product_description,
@@ -26,6 +28,7 @@ class CreateQuestionRequest(BaseModel):
 class QuestionInput(BaseModel):
     """Полная схема вопроса для передачи воркеру (без prompt_id — он задаётся на уровне воркера)."""
 
+    id: Optional[str] = None
     question: str
     product_name: str
     product_description: str

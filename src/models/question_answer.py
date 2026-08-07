@@ -16,6 +16,7 @@ class QuestionAnswer(Base):
     product_name = Column(String(500), default="")
     product_description = Column(Text, default="")
     product_id = Column(Integer, nullable=True)
+    external_id = Column(String(255), nullable=True, index=True)
     prompt_id = Column(Integer, nullable=False)
 
     answer_text = Column(Text, default="")

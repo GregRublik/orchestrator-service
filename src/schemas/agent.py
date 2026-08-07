@@ -226,6 +226,7 @@ class QuestionAnswerResponse(BaseModel):
     product_name: str = ""
     product_description: str = ""
     product_id: Optional[int] = None
+    external_id: Optional[str] = None
     prompt_id: int
     answer_text: str = ""
     is_read: int = 0
